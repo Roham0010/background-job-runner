@@ -1,66 +1,160 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Custom Background Job Runner System Documentation
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+### Features:
+- Dynamic execution of background jobs using class name, method name, and parameters.
+- Configurable retry attempts and delays.
+- Job logging to track execution status and errors.
+- Sample random error throwing in jobs
+- Error handling with retries and delays.
+- (Optional) I did not do the dashboard part.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### The folder structure is as follow:
+- **Contracts**
+    - `JobInterface.php`
+- **Factories**
+    - `JobFactory.php`
+- **Jobs**
+    - `Invoice/CompleteInvoiceJob.php`
+    - `Email/SendEmailJob.php`
+- **Abstracts**
+    - `JobAbstract.php`
+- **Services**
+	- `BackgroundJobRunner.php` (Main runner class)
+- **config/background_jobs.php**
+- **app/helpers.php**
+- **logs/background_jobs.log**
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Usage
+- Configure the project as below in the next steps if needed
+- Run `composer install` to install the packages
+- Setup the mysql in case want to run commands via the provided route
+- Run `php artisan key:generate` and `php artisan migrate` if needed
+- Start the project with `php artisan serve`
+- With commands:
+	- run these commands to execute jobs:
+	```
+		job:job-fail 		// Failing sample
+		job:job-invoice		// Invoice sample
+		job:job-success		// Email success sample(may also include the random error and retrying)
+	```
+- With route `localhost:8000/` you can run a simple Email job
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### To configure, add and update the jobs you can go to the background_jobs config file and edit:
+```php
+// config/background_jobs.php
+return [
+    'retry_attempts' => 3,
+    'retry_delay' => 5, // Delay in seconds between retries
+    'jobs' => [
+        'Invoice' => [
+            'job_class' => 'CompleteInvoiceJob',
+            'retry_attempts' => 3,
+            'retry_delay' => 10,
+        ],
+        'Email' => [
+            'job_class' => 'SendEmailJob',
+            'retry_attempts' => 5,
+            'retry_delay' => 5,
+        ],
+    ],
+];
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Retry Attempts & Delays
+In the configuration file `background_jobs.php`, you can set the retry attempts and the delay between retries.
+The root ones are in case we have some jobs that follow the same numbers as others. they are defaults.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **retry_attempts**: Number of attempts to retry the job if it fails.
+- **retry_delay**: The time in seconds to wait before retrying the job.
 
-## Laravel Sponsors
+For example:
+```php
+'retry_attempts' => 3, // Retry 3 times before failing
+'retry_delay' => 10, // Wait 10 seconds between retries
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Security Settings
+- To ensure only approved jobs are run, we validate job class names and method names to avoid running arbitrary or harmful code.
+- We also validate the method parameters to ensure the naming and quantity.
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Testing & Logs
 
-## Contributing
+### Sample Usage
+Here is an example of testing the background job runner manually:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```php
+// Simulate running an email job
+$params = ['email' => "email@gmail.com", 'subject' => 'sbj', 'message' => 'msg'];
+runBackgroundJob('Email', 'sendEmail', $params);
+```
+The class name is what it is in the config/background_jobs.jobs array keys.
 
-## Code of Conduct
+### Sample Log Output
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+#### background_jobs.log
+Logs are also added to the repo.
+We have two types of logging that can be changed manually and also with $logger->setOutputType(json|string)
+```plaintext
 
-## Security Vulnerabilities
+[2024-11-12 18:19:01] local.INFO: Email -> RUNNING <===============>
+[2024-11-12 18:19:01] local.INFO: Email -> ATTEMPT: 0
+[2024-11-12 18:19:01] local.INFO: Email -> FROM_JOB_CLASS: {Sending email to: email@gmail.com, Subject: sbj}
+[2024-11-12 18:19:01] local.INFO: Email -> FROM_JOB_CLASS: {Email sent successfully to: email@gmail.com}
+[2024-11-12 18:19:01] local.INFO: Email -> SUCCEED <===============>
+[2024-11-12 18:19:18] local.INFO: Invoice -> RUNNING <===============>
+[2024-11-12 18:19:18] local.INFO: Invoice -> ATTEMPT: 0
+[2024-11-12 18:19:18] local.INFO: Invoice -> FROM_JOB_CLASS: {starting invoice completion}
+[2024-11-12 18:19:18] local.ERROR: Invoice -> Sample ERROR
+[2024-11-12 18:19:18] local.INFO: Invoice -> FAILED attempt #1
+[2024-11-12 18:19:18] local.ERROR: Invoice -> Sample ERROR
+[2024-11-12 18:19:28] local.INFO: Invoice -> ATTEMPT: 1
+[2024-11-12 18:19:28] local.INFO: Invoice -> FROM_JOB_CLASS: {starting invoice completion}
+[2024-11-12 18:19:28] local.INFO: Invoice -> FROM_JOB_CLASS: {invoice completed: 123}
+[2024-11-12 18:19:28] local.INFO: Invoice -> SUCCEED <===============>
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+||
 
-## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+[2024-11-12 18:28:24] local.INFO: array (
+  'job_name' => 'Email',
+  'status' => 'RUNNING <===============>',
+  'log_type' => 'info',
+  'additional_info' =>
+  array (
+  ),
+  'timestamp' => '2024-11-12 18:28:24',
+)
+[2024-11-12 18:28:24] local.INFO: array (
+  'job_name' => 'Email',
+  'status' => 'ATTEMPT: 0',
+  'log_type' => 'info',
+  'additional_info' =>
+  array (
+  ),
+  'timestamp' => '2024-11-12 18:28:24',
+)
+```
+
+ ## How to add new jobs
+ - Defind a new item in the config file
+ - Create the job in BackgroundJubRunnerService/Jobs and extend it from the JobAbastract to have the logging functionality
+ - Define the method name it should execute
+ - Run the job with the runBackgroundJob helper
+
+## Limitations & Improvements
+
+### Assumptions
+- From assessment: [Create a PHP script that can run classes or methods] I consider the "or methods" doesn't refer to also running stand alone methods, in a realworld project I would ask that before implementation.
+- The job classes extend the `JobAbstract`.
+- Jobs that are dynamically created will follow the naming convention of `ClassNameJob`.
+- I used sleep for delays for just simplicity, I could have used the dispatch too but you asked for not using Laravel system, or could have used a table to cronjobs to watch for failed jobs etc as Laravel Horizon does...
+
+### Limitations
+- The system does not support complex job dependency chains (i.e., waiting for one job to complete before another starts).
+- Job priority handling is not implemented.

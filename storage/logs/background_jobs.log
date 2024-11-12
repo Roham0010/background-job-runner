@@ -1,0 +1,74 @@
+[2024-11-12 18:31:24] local.INFO: Email -> RUNNING <===============>  
+[2024-11-12 18:31:24] local.INFO: Email -> ATTEMPT: 0  
+[2024-11-12 18:31:24] local.INFO: Email -> FROM_JOB_CLASS: {Sending email to: email@gmail.com, Subject: sbj}  
+[2024-11-12 18:31:24] local.INFO: Email -> FROM_JOB_CLASS: {Email sent successfully to: email@gmail.com}  
+[2024-11-12 18:31:24] local.INFO: Email -> SUCCEED <===============>  
+[2024-11-12 18:31:28] local.INFO: Invoice -> RUNNING <===============>  
+[2024-11-12 18:31:28] local.INFO: Invoice -> ATTEMPT: 0  
+[2024-11-12 18:31:28] local.INFO: Invoice -> FROM_JOB_CLASS: {starting invoice completion}  
+[2024-11-12 18:31:28] local.ERROR: Invoice -> Sample ERROR  
+[2024-11-12 18:31:28] local.INFO: Invoice -> FAILED attempt #1  
+[2024-11-12 18:31:28] local.ERROR: Invoice -> Sample ERROR  
+[2024-11-12 18:31:38] local.INFO: Invoice -> ATTEMPT: 1  
+[2024-11-12 18:31:38] local.INFO: Invoice -> FROM_JOB_CLASS: {starting invoice completion}  
+[2024-11-12 18:31:38] local.INFO: Invoice -> FROM_JOB_CLASS: {invoice completed: 123}  
+[2024-11-12 18:31:38] local.INFO: Invoice -> SUCCEED <===============>  
+[2024-11-12 18:31:42] local.ERROR: App\BackgroundJobRunnerService\Jobs\Email\SendEmailJob Job ERROR Missing parameter: email  
+[2024-11-12 18:32:25] local.INFO: array (
+  'job_name' => 'Email',
+  'status' => 'RUNNING <===============>',
+  'log_type' => 'info',
+  'additional_info' => 
+  array (
+  ),
+  'timestamp' => '2024-11-12 18:32:25',
+)  
+[2024-11-12 18:32:25] local.INFO: array (
+  'job_name' => 'Email',
+  'status' => 'ATTEMPT: 0',
+  'log_type' => 'info',
+  'additional_info' => 
+  array (
+  ),
+  'timestamp' => '2024-11-12 18:32:25',
+)  
+[2024-11-12 18:32:25] local.INFO: array (
+  'job_name' => 'Email',
+  'status' => 'FROM_JOB_CLASS: {Sending email to: email@gmail.com, Subject: sbj}',
+  'log_type' => 'info',
+  'additional_info' => 
+  array (
+  ),
+  'timestamp' => '2024-11-12 18:32:25',
+)  
+[2024-11-12 18:32:25] local.INFO: array (
+  'job_name' => 'Email',
+  'status' => 'FROM_JOB_CLASS: {Email sent successfully to: email@gmail.com}',
+  'log_type' => 'info',
+  'additional_info' => 
+  array (
+  ),
+  'timestamp' => '2024-11-12 18:32:25',
+)  
+[2024-11-12 18:32:25] local.INFO: array (
+  'job_name' => 'Email',
+  'status' => 'SUCCEED <===============>',
+  'log_type' => 'info',
+  'additional_info' => 
+  array (
+  ),
+  'timestamp' => '2024-11-12 18:32:25',
+)  
+[2024-11-12 18:37:08] local.INFO: Email -> RUNNING <===============>  
+[2024-11-12 18:37:08] local.INFO: Email -> ATTEMPT: 0  
+[2024-11-12 18:37:08] local.INFO: Email -> FROM_JOB_CLASS: {Sending email to: email@gmail.com, Subject: sbj}  
+[2024-11-12 18:37:08] local.INFO: Email -> FAILED attempt #1  
+[2024-11-12 18:37:08] local.ERROR: Email -> Sample ERROR  
+[2024-11-12 18:37:13] local.INFO: Email -> ATTEMPT: 1  
+[2024-11-12 18:37:13] local.INFO: Email -> FROM_JOB_CLASS: {Sending email to: email@gmail.com, Subject: sbj}  
+[2024-11-12 18:37:13] local.INFO: Email -> FAILED attempt #2  
+[2024-11-12 18:37:13] local.ERROR: Email -> Sample ERROR  
+[2024-11-12 18:37:18] local.INFO: Email -> ATTEMPT: 2  
+[2024-11-12 18:37:18] local.INFO: Email -> FROM_JOB_CLASS: {Sending email to: email@gmail.com, Subject: sbj}  
+[2024-11-12 18:37:18] local.INFO: Email -> FROM_JOB_CLASS: {Email sent successfully to: email@gmail.com}  
+[2024-11-12 18:37:18] local.INFO: Email -> SUCCEED <===============>  

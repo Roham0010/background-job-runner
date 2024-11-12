@@ -3,5 +3,5 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    runBackgroundJob('Email', 'sendEmail', ['email' => "email@gmail.com", 'subject' => 'sbj', 'message' => 'msg']);
 });
